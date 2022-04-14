@@ -8,5 +8,4 @@ Albedo and generated ssbump map with ambient occlusion.
 <img src="https://i.imgur.com/kjJaxc2.png" width="256"> <img src="https://i.imgur.com/hZ7UOnV.jpg" width="256">
 
 Rendered with radiosity normal mapping. Note the self-shadowing vs regular normal mapping.
-<img src="https://i.imgur.com/XtL5FG3.png" width="512">
-
+<img src="https://i.imgur.com/XtL5FG3.png" width="420"> <img src="https://i.imgur.com/a7h9DG0.png" width="420">
