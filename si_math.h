@@ -48,14 +48,14 @@ new_si_v3(f32 x, f32 y, f32 z){
 
 SI_INLINE si_v3
 new_si_v3_0(){
-    si_v3 result = {};
+    si_v3 result = {0};
     return result;
 }
 
 SI_INLINE si_mat4x4
 si_mat4x4_identity()
 {
-    si_mat4x4 result = {};
+    si_mat4x4 result = {0};
     result.v[0][0] = 1.0f;
     result.v[1][1] = 1.0f;
     result.v[2][2] = 1.0f;
@@ -85,7 +85,7 @@ si_mat4x4_scale_f(float scale)
 SI_INLINE si_mat4x4
 si_orthographic(f32 left, f32 right, f32 bottom, f32 top, f32 nearDist, f32 farDist)
 {
-    si_mat4x4 result = {};
+    si_mat4x4 result = {0};
 
     result.v[0][0] = 2.0f / (right - left);
     result.v[1][1] = 2.0f / (top - bottom);
@@ -119,7 +119,7 @@ si_perspective(f32 fov, f32 aspectRatio, f32 nearDist, f32 farDist)
 SI_INLINE si_mat4x4
 si_mat4x4_mul(si_mat4x4 a, si_mat4x4 b)
 {
-    si_mat4x4 result = {};
+    si_mat4x4 result = {0};
     for (i32 x = 0; x < 4; ++x) {
         for (i32 y = 0; y < 4; ++y) {
             f32 sum = 0;
@@ -135,9 +135,7 @@ si_mat4x4_mul(si_mat4x4 a, si_mat4x4 b)
 SI_INLINE si_mat4x4
 si_mat4x4_mul3(si_mat4x4 a, si_mat4x4 b, si_mat4x4 c)
 {
-    si_mat4x4 result = si_mat4x4_mul(a, b);
-    result = si_mat4x4_mul(result, c);
-    return result;
+    return si_mat4x4_mul(si_mat4x4_mul(a, b), c);
 }
 
 SI_INLINE si_v3

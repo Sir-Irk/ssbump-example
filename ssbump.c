@@ -78,14 +78,14 @@ int main(void)
     stbi_set_flip_vertically_on_load(true);
 
     i32 w, h, c;
-    u32 *diffuseImg = (u32 *)stbi_load("textures/face-ssbump.png", &w, &h, &c, 4);
+    u32 *diffuseImg = (u32 *)stbi_load("textures/broken_tiles_01.tga", &w, &h, &c, 4);
     assert(diffuseImg);
     GLuint diffuse = create_texture(diffuseImg, w, h, false);
 
-    //u32 *ssbumpImg  = (u32 *)stbi_load("textures/ssbump.png", &w, &h, NULL, 4);
-    u32 *ssbumpImg  = (u32 *)stbi_load("textures/face-ssbump.png", &w, &h, NULL, 4);
-    u32 *normalImg  = sinm_normal_map(ssbumpImg, w, h, 80.0f, 2.0f, sinm_greyscale_average, false);
+    u32 *ssbumpImg  = (u32 *)stbi_load("textures/ssbump.png", &w, &h, NULL, 4);
+    //u32 *ssbumpImg  = (u32 *)stbi_load("textures/face-ssbump.png", &w, &h, NULL, 4);
     assert(ssbumpImg);
+    u32 *normalImg  = sinm_normal_map(ssbumpImg, w, h, 80.0f, 2.0f, sinm_greyscale_average, false);
     GLuint ssbump = create_texture(ssbumpImg, w, h, true);
     GLuint normal = create_texture(normalImg, w, h, true);
 
@@ -109,6 +109,7 @@ int main(void)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 	glEnableVertexAttribArray(3);
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(quad[0]), (void *)0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(quad[0]), (void *)(3*sizeof(f32)));
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(quad[0]), (void *)(6*sizeof(f32)));
@@ -116,7 +117,6 @@ int main(void)
 
     GLuint shader = create_program_from_files("shaders/ssbump_phong_forward.vert", "shaders/ssbump_phong_forward.frag", &mem.arena);
     glUseProgram(shader);
-
 
     STBI_FREE(diffuseImg);
     STBI_FREE(ssbumpImg);
@@ -132,35 +132,45 @@ int main(void)
     glUniform1i(diffuseUni, 0);
     glUniform1i(normalUni, 1);
 
-
     glEnable(GL_FRAMEBUFFER_SRGB);
 
-    si_v3 lightPos = {0.1f, 0.1, -1.5f};
+    f32 yRadians = 0.2f;
+    si_v3 lightPos = {0.1f, 0.1, -0.5f};
     while(!glfwWindowShouldClose(window)){
 
         if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
             shader = create_program_from_files("shaders/ssbump_phong_forward.vert", "shaders/ssbump_phong_forward.frag", &mem.arena);
+            glUseProgram(shader);
             mvpUni = get_uniform_location(shader, "mvp");
             modelUni = get_uniform_location(shader, "model");
             viewPosUni = get_uniform_location(shader, "viewPos");
             lightPosUni = get_uniform_location(shader, "lightPos");
             uvScaleUni = get_uniform_location(shader, "uvScale");
-            glUseProgram(shader);
+            glUniform1i(diffuseUni, 0);
+            glUniform1i(normalUni, 1);
         }
 
         i32 winW, winH;
         glfwGetFramebufferSize(window, &winW, &winH);
         f32 ratio = winW / (float)winH;
 
-        si_v3 viewPos = {0.0f, 0.0f, -1.5f};
+        //Rotate the plane's model on the Y axis
+        f32 rotSpeed = 0.005f;
+        if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
+            yRadians += rotSpeed;
+        } else if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
+            yRadians -= rotSpeed;
+        }
+
         si_mat4x4 m = si_mat4x4_rot(si_mat4x4_identity(), 0.5f, new_si_v3(1.0f, 0.0f, 0.0f));
-        m = si_mat4x4_rot(m, 0.2, new_si_v3(0.0f, 1.0f, 0.0f));
-        //si_mat4x4 m = si_mat4x4_identity();
+        m = si_mat4x4_rot(m, yRadians, new_si_v3(0.0f, 1.0f, 0.0f));
+
+        si_v3 viewPos = {0.0f, 0.0f, -1.5f};
         si_mat4x4 v = si_mat4x4_translate(si_mat4x4_identity(), viewPos);
         si_mat4x4 p = si_perspective(60, ratio, 0.0f, 100.0f);
         si_mat4x4 mvp = si_mat4x4_mul3(p, v, m);
 
-        f32 speed = 0.01f;
+        f32 speed = 0.005f;
         if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
             lightPos.x -= speed;
         } else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
@@ -186,10 +196,10 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 
         glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, diffuse);
-        glBindTexture(GL_TEXTURE_2D, normal);
+        glBindTexture(GL_TEXTURE_2D, diffuse);
         glActiveTexture(GL_TEXTURE0 + 1);
         glBindTexture(GL_TEXTURE_2D, ssbump);
+        //glBindTexture(GL_TEXTURE_2D, normal);
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, array_count(quad));
 

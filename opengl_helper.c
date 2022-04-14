@@ -23,10 +23,8 @@ void APIENTRY opengl_debug_callback(GLenum source,
         } break;
         case GL_DEBUG_SEVERITY_LOW: {
             fprintf(stderr, "Low severity Opengl Message: %s\n", message);
-            // RendererLog("Low severity Opengl message: %s\r\n", message);
         } break;
         case GL_DEBUG_SEVERITY_NOTIFICATION: {
-            // RendererLog("Low severity Opengl message: %s\r\n", message);
         } break;
     }
 }

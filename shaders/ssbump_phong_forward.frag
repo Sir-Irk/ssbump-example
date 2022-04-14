@@ -38,7 +38,6 @@ void main() {
     dp *= dp;
     float sum = dot(dp, vec3(1.0f, 1.0f, 1.0f));
 
-
     float diff = max(dot(normal, normalize(LightDirTangentSpace)), 0.0);
     vec3 halfwayDir = normalize(normalize(LightDirTangentSpace) + normalize(ViewDirTangentSpace));
     float energyConserv = (8.0 + 100.0) / (8.0 * pi);
@@ -49,12 +48,12 @@ void main() {
 
     vec3 lightColor = vec3(1.0f, 1.0f, 0.9f); 
 
-    float bright = 0.1f;
+    float bright = 0.2f;
 	vec3 albedo   = texture(diffuseMap, UV*2.0f).rgb;
 
     vec3 ambient  = vec3(0.01f * albedo);
-    //vec3 diffuse  = lightColor * albedo * diff * bright * attenuation;
-    vec3 diffuse  = lightColor * diff * bright * attenuation;
+    vec3 diffuse  = lightColor * albedo * diff * bright * attenuation;
+    //vec3 diffuse  = lightColor * diff * bright * attenuation;
     //vec3 specular = lightColor * texture(mat.specular, UV).rgb * bright * spec * attenuation;
     vec3 specular = lightColor * 0.01f * bright * spec * attenuation;
     //vec3 specular = vec3(0.0f);
