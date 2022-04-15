@@ -11,4 +11,5 @@ Rendered with radiosity normal mapping. Note the self-shadowing vs regular norma
 <img src="https://i.imgur.com/XtL5FG3.png" width="420"> 
 
 With albedo
+
 <img src="https://i.imgur.com/a7h9DG0.png" width="420">
