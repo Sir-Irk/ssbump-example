@@ -1,7 +1,7 @@
 # ssbump-example
 A basic opengl example using Valve's ssbump(self-shadowed bump mapping) AKA self-shadowed radiosity normal mapping with dynamic lighting. This example doesn't show usage with lightmapping but more information about that can be found in the white paper.
 
-[Valve's original paper by Chris Green](https://cdn.akamai.steamstatic.com/apps/valve/2007/SIGGRAPH2007_EfficientSelfShadowedRadiosityNormalMapping.pdf)
+[Valve's white paper by Chris Green](https://cdn.akamai.steamstatic.com/apps/valve/2007/SIGGRAPH2007_EfficientSelfShadowedRadiosityNormalMapping.pdf)
 
 Albedo and generated ssbump map with ambient occlusion.
 
